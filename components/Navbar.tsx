@@ -1,0 +1,139 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { RESTAURANT_INFO } from "@/data/restaurantData";
+import { Phone, Menu as MenuIcon, X } from "lucide-react";
+
+export const Navbar: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+
+      const sections = ["home", "about", "menu", "combos", "gallery", "contact"];
+      const scrollPos = window.scrollY + 120;
+
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Home", href: "#home", id: "home" },
+    { name: "About", href: "#about", id: "about" },
+    { name: "Menu", href: "#menu", id: "menu" },
+    { name: "Combos", href: "#combos", id: "combos" },
+    { name: "Gallery", href: "#gallery", id: "gallery" },
+    { name: "Contact", href: "#contact", id: "contact" },
+  ];
+
+  return (
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-[#0E0E0E]/90 backdrop-blur-xl border-b border-white/5 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
+            : "bg-[#0E0E0E]/60 backdrop-blur-md py-4 sm:py-5"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          {/* Logo & Brand */}
+          <a href="#home" className="flex items-center group py-1">
+            <img
+              src={RESTAURANT_INFO.logoUrl}
+              alt={RESTAURANT_INFO.name}
+              className="h-9 sm:h-11 w-auto object-contain drop-shadow-[0_2px_14px_rgba(228,87,46,0.35)] group-hover:scale-105 transition-transform duration-300"
+            />
+          </a>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2 px-3 py-1.5 rounded-full bg-[#1A1A1A]/70 border border-white/10 backdrop-blur-md">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.id;
+              return (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all ${
+                    isActive
+                      ? "bg-[#E4572E] text-white shadow-[0_2px_12px_rgba(228,87,46,0.35)]"
+                      : "text-[#A8A29A] hover:text-[#F5F1EA] hover:bg-white/5"
+                  }`}
+                >
+                  {link.name}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Actions: Call Now + Mobile Toggle */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href={`tel:${RESTAURANT_INFO.phones[0]}`}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#E4572E] text-white hover:bg-[#c9451e] text-xs font-semibold tracking-wide shadow-[0_2px_16px_rgba(228,87,46,0.35)] hover:shadow-[0_4px_20px_rgba(228,87,46,0.5)] transition-all"
+            >
+              <Phone className="w-3.5 h-3.5" />
+              <span>Call Now</span>
+            </a>
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg bg-[#1C1B1B] text-[#F5F1EA] border border-white/10 hover:bg-[#2A2A2A] transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[#F4B860]" /> : <MenuIcon className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Slide-down Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden bg-black/85 backdrop-blur-xl flex flex-col pt-24 px-6 pb-8 animate-fadeIn">
+          <div className="flex flex-col gap-2">
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-3 rounded-xl text-base font-medium transition-all ${
+                  activeSection === link.id
+                    ? "bg-[#E4572E] text-white font-semibold"
+                    : "text-[#F5F1EA] hover:bg-white/5"
+                }`}
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-white/10 flex flex-col gap-3">
+            <a
+              href={`tel:${RESTAURANT_INFO.phones[0]}`}
+              className="w-full py-3.5 rounded-xl bg-[#E4572E] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg"
+            >
+              <Phone className="w-4 h-4" />
+              <span>Call {RESTAURANT_INFO.phoneDisplay[0]}</span>
+            </a>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
