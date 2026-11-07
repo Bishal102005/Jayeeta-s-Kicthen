@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { useCart } from "@/context/CartContext";
 import {
   MENU_CATEGORIES,
   RESTAURANT_INFO,
@@ -23,9 +24,14 @@ import {
   MessageCircle,
   Info,
   Phone,
+  Plus,
+  Minus,
+  ShoppingBag,
+  ArrowRight,
 } from "lucide-react";
 
 export const Menu: React.FC = () => {
+  const { addToCart, updateQuantity, getItemQuantity, totalCount, totalAmount, openCart } = useCart();
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [dietFilter, setDietFilter] = useState<"all" | DietType>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -252,6 +258,34 @@ export const Menu: React.FC = () => {
           )}
         </div>
 
+        {/* Active Cart Sticky Notice Banner */}
+        {totalCount > 0 && (
+          <div className="mb-8 p-3.5 sm:p-4 rounded-2xl bg-[#1A1A1A]/95 border border-[#F4B860]/40 shadow-xl flex items-center justify-between gap-3 max-w-5xl mx-auto backdrop-blur-md animate-fadeIn">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#E4572E]/20 text-[#E4572E] flex items-center justify-center shrink-0">
+                <ShoppingBag className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-xs sm:text-sm font-bold text-[#F5F1EA] block">
+                  {totalCount} {totalCount === 1 ? "item" : "items"} in your cart •{" "}
+                  <strong className="text-[#F4B860]">₹{totalAmount}</strong>
+                </span>
+                <span className="text-[11px] text-[#A8A29A]">
+                  Ready to place your order via WhatsApp
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={openCart}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-black font-extrabold text-xs shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0"
+            >
+              <span>View Cart</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
         {/* Category Horizontal Filter Tabs */}
         <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-4 mb-12 scrollbar-none">
           <button
@@ -438,9 +472,7 @@ export const Menu: React.FC = () => {
 
   // Helper renderer for individual dish cards with dish photo
   function renderItemCard(item: FoodItem) {
-    const whatsappUrl = `https://wa.me/${RESTAURANT_INFO.whatsappNumber}?text=${encodeURIComponent(
-      `Hi Jayeeta's Kitchen! I would like to order: ${item.name} (₹${item.price})`
-    )}`;
+    const quantity = getItemQuantity(item.id);
 
     return (
       <div
@@ -470,22 +502,45 @@ export const Menu: React.FC = () => {
             )}
           </div>
 
-          {/* Price & Order CTA */}
-          <div className="flex items-center justify-between mt-2.5 pt-1.5 border-t border-white/5">
-            <span className="font-serif text-sm sm:text-base font-bold text-[#F4B860] tracking-tight">
+          {/* Price & Add to Cart CTA */}
+          <div className="flex items-center justify-between mt-2.5 pt-1.5 border-t border-white/5 gap-2">
+            <span className="font-serif text-sm sm:text-base font-bold text-[#F4B860] tracking-tight shrink-0">
               ₹{item.price}
             </span>
 
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={`Order ${item.name} on WhatsApp`}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-black border border-[#25D366]/30 text-[11px] font-bold transition-all shadow-sm"
-            >
-              <MessageCircle className="w-3 h-3" />
-              <span>Order</span>
-            </a>
+            {quantity === 0 ? (
+              <button
+                type="button"
+                onClick={() => addToCart(item)}
+                title={`Add ${item.name} to cart`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#E4572E] to-[#F36238] hover:from-[#d14720] hover:to-[#e4572e] text-white text-[11px] font-bold shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer shrink-0"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add to Cart</span>
+              </button>
+            ) : (
+              <div className="inline-flex items-center rounded-xl bg-[#0E0E0E] border border-[#F4B860]/50 shadow-sm overflow-hidden shrink-0">
+                <button
+                  type="button"
+                  onClick={() => updateQuantity(item.id, quantity - 1)}
+                  className="w-7 h-7 flex items-center justify-center text-[#A8A29A] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+                <span className="w-6 text-center text-xs font-bold text-[#F4B860]">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => addToCart(item)}
+                  className="w-7 h-7 flex items-center justify-center text-[#A8A29A] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

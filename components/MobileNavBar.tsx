@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { RESTAURANT_INFO } from "@/data/restaurantData";
-import { Home, UtensilsCrossed, Sparkles, Phone, MessageCircle } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import { Home, UtensilsCrossed, Sparkles, ShoppingBag, MessageCircle } from "lucide-react";
 
 export const MobileNavBar: React.FC = () => {
+  const { totalCount, openCart } = useCart();
   const [activeSection, setActiveSection] = useState<string>("home");
 
   useEffect(() => {
@@ -97,18 +99,24 @@ export const MobileNavBar: React.FC = () => {
           <span className="text-[10px] tracking-wide">Combos</span>
         </a>
 
-        {/* 4. Call */}
-        <a
-          href={`tel:${RESTAURANT_INFO.phones[0]}`}
-          className="flex flex-col items-center justify-center gap-1 py-1 rounded-xl text-[#A8A29A] hover:text-[#F5F1EA] transition-all duration-200 active:scale-95"
+        {/* 4. Cart (with dynamic count badge) */}
+        <button
+          type="button"
+          onClick={openCart}
+          className="relative flex flex-col items-center justify-center gap-1 py-1 rounded-xl text-[#F4B860] hover:text-white transition-all duration-200 active:scale-95 cursor-pointer"
         >
-          <div className="p-1.5 rounded-full bg-white/5 hover:bg-[#E4572E]/20 hover:text-[#E4572E] transition-all">
-            <Phone className="w-5 h-5" />
+          <div className="relative p-1.5 rounded-full bg-white/5 hover:bg-[#F4B860]/20 transition-all">
+            <ShoppingBag className="w-5 h-5" />
+            {totalCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center shadow-md animate-scaleIn">
+                {totalCount}
+              </span>
+            )}
           </div>
-          <span className="text-[10px] tracking-wide">Call</span>
-        </a>
+          <span className="text-[10px] tracking-wide font-semibold">Cart</span>
+        </button>
 
-        {/* 5. WhatsApp Order (Highlighted CTA) */}
+        {/* 5. WhatsApp Order */}
         <a
           href={whatsappUrl}
           target="_blank"
@@ -118,10 +126,9 @@ export const MobileNavBar: React.FC = () => {
           <div className="p-1.5 rounded-full bg-[#25D366]/20 shadow-[0_0_14px_rgba(37,211,102,0.4)]">
             <MessageCircle className="w-5 h-5 text-[#25D366]" />
           </div>
-          <span className="text-[10px] tracking-wide">Order</span>
+          <span className="text-[10px] tracking-wide">WhatsApp</span>
         </a>
       </div>
     </nav>
   );
 };
-

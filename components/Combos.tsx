@@ -2,9 +2,11 @@
 
 import React from "react";
 import { COMBOS, RESTAURANT_INFO } from "@/data/restaurantData";
-import { Check, MessageCircle, UtensilsCrossed, Dumbbell, SunMedium, Award, Sparkles, Tag } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import { Check, MessageCircle, UtensilsCrossed, Dumbbell, SunMedium, Award, Sparkles, Tag, Plus, Minus, ShoppingBag } from "lucide-react";
 
 export const Combos: React.FC = () => {
+  const { addToCart, updateQuantity, getItemQuantity, openCart } = useCart();
   const renderIcon = (iconName: string, className: string) => {
     switch (iconName) {
       case "UtensilsCrossed":
@@ -120,17 +122,48 @@ export const Combos: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* WhatsApp Order CTA */}
+                  {/* Cart Action Buttons */}
                   <div className="pt-2">
-                    <a
-                      href={whatsappUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#25D366]/20 border border-[#25D366]/40 text-[#25D366] text-xs font-bold hover:bg-[#25D366] hover:text-black transition-all duration-300 shadow-sm"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Order at {combo.price}</span>
-                    </a>
+                    {getItemQuantity(combo.id) === 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => addToCart(combo)}
+                        className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#E4572E] to-[#F36238] text-white text-xs font-bold hover:shadow-lg transition-all duration-300 shadow-md active:scale-95 cursor-pointer"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Add Combo to Cart • {combo.price}</span>
+                      </button>
+                    ) : (
+                      <div className="flex items-center justify-between p-1.5 rounded-xl bg-[#0E0E0E] border border-[#F4B860]/40">
+                        <div className="flex items-center gap-2 pl-2">
+                          <ShoppingBag className="w-4 h-4 text-[#F4B860]" />
+                          <span className="text-xs font-bold text-[#F5F1EA]">
+                            Added to Cart
+                          </span>
+                        </div>
+                        <div className="inline-flex items-center rounded-lg bg-[#1F1E1E] border border-white/10 overflow-hidden">
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(combo.id, getItemQuantity(combo.id) - 1)}
+                            className="w-8 h-8 flex items-center justify-center text-[#A8A29A] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="w-7 text-center text-xs font-bold text-[#F4B860]">
+                            {getItemQuantity(combo.id)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => addToCart(combo)}
+                            className="w-8 h-8 flex items-center justify-center text-[#A8A29A] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { RESTAURANT_INFO } from "@/data/restaurantData";
-import { Phone, Menu as MenuIcon, X } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import { Phone, Menu as MenuIcon, X, ShoppingBag } from "lucide-react";
 
 export const Navbar: React.FC = () => {
+  const { totalCount, openCart } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
@@ -81,8 +83,23 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Actions: Call Now + Mobile Toggle */}
+          {/* Actions: Cart + Call Now + Mobile Toggle */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Cart Button with Count Badge */}
+            <button
+              onClick={openCart}
+              className="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#1C1B1B] text-[#F5F1EA] border border-white/10 hover:border-[#F4B860]/50 hover:bg-[#262626] transition-all cursor-pointer shrink-0"
+              aria-label={`View Cart (${totalCount} items)`}
+            >
+              <ShoppingBag className="w-4 h-4 text-[#F4B860]" />
+              <span className="hidden sm:inline text-xs font-semibold">Cart</span>
+              {totalCount > 0 && (
+                <span className="min-w-4 h-4 px-1 rounded-full bg-[#E4572E] text-white text-[10px] font-bold flex items-center justify-center shadow-md animate-scaleIn">
+                  {totalCount}
+                </span>
+              )}
+            </button>
+
             <a
               href={`tel:${RESTAURANT_INFO.phones[0]}`}
               className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-[#E4572E] text-white hover:bg-[#c9451e] text-xs font-semibold tracking-wide shadow-[0_2px_16px_rgba(228,87,46,0.35)] hover:shadow-[0_4px_20px_rgba(228,87,46,0.5)] transition-all shrink-0"

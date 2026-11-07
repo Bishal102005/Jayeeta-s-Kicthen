@@ -40,13 +40,20 @@ export const ReservationDrawer: React.FC<ReservationDrawerProps> = ({ isOpen, on
 
   const handleWhatsAppSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `Hello Jayeeta's Kitchen! I would like to reserve a table/inquire:
-- Name: ${name || "Guest"}
-- Phone: ${phone || "N/A"}
-- Guests: ${guests}
-- Date: ${date}
-- Time: ${time}
-- Special Notes: ${notes || "None"}`;
+    let message = `★ *================================* ★\n`;
+    message += `   *TABLE RESERVATION INQUIRY*\n`;
+    message += `       *Jayeeta's Kitchen, Barasat*\n`;
+    message += `★ *================================* ★\n\n`;
+    message += `*Guest Name:* ${name.trim() || "Guest"}\n`;
+    message += `*Phone:* ${phone.trim() || "N/A"}\n`;
+    message += `*Number of Guests:* ${guests} Persons\n`;
+    message += `*Date:* ${date}\n`;
+    message += `*Time:* ${time}\n`;
+    if (notes.trim()) {
+      message += `*Special Request:* ${notes.trim()}\n`;
+    }
+    message += `----------------------------------------\n`;
+    message += `_Please let me know if a table is available. Thank you!_`;
 
     const url = `https://wa.me/${RESTAURANT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
