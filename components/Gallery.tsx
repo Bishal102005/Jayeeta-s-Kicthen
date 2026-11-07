@@ -23,7 +23,7 @@ export const Gallery: React.FC = () => {
   };
 
   return (
-    <section id="gallery" className="py-24 relative bg-[#0B0B0B]">
+    <section id="gallery" className="py-20 sm:py-24 relative bg-[#0B0B0B] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-2 max-w-2xl mx-auto mb-16">

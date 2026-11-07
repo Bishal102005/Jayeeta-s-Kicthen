@@ -6,7 +6,7 @@ import { Calendar, HeartHandshake, Utensils, Flame } from "lucide-react";
 
 export const About: React.FC = () => {
   return (
-    <section id="about" className="py-24 relative bg-[#0E0E0E]">
+    <section id="about" className="py-20 sm:py-24 relative bg-[#0E0E0E] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Left: Framed Dish & Mortar Visual */}

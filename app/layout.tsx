@@ -53,8 +53,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${playfair.variable} ${jakarta.variable} scroll-smooth`}>
-      <body className="bg-[#0B0B0B] text-[#F5F1EA] font-sans antialiased selection:bg-[#E4572E] selection:text-white min-h-screen">
+    <html lang="en" className={`dark ${playfair.variable} ${jakarta.variable} scroll-smooth overflow-x-hidden`}>
+      <body className="bg-[#0B0B0B] text-[#F5F1EA] font-sans antialiased selection:bg-[#E4572E] selection:text-white min-h-screen overflow-x-hidden max-w-full w-full">
         {children}
       </body>
     </html>

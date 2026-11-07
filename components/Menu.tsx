@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from "react";
 import {
   MENU_CATEGORIES,
-  PRINTED_MENU_PAGES,
   RESTAURANT_INFO,
   FoodItem,
   DietType,
@@ -22,9 +21,6 @@ import {
   Search,
   X,
   MessageCircle,
-  Eye,
-  ChevronRight,
-  ChevronLeft,
   Info,
   Phone,
 } from "lucide-react";
@@ -33,8 +29,6 @@ export const Menu: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [dietFilter, setDietFilter] = useState<"all" | DietType>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isFlyerModalOpen, setIsFlyerModalOpen] = useState<boolean>(false);
-  const [selectedFlyerIndex, setSelectedFlyerIndex] = useState<number>(0);
 
   // Icon selector
   const renderCategoryIcon = (iconName: string, className: string) => {
@@ -147,18 +141,13 @@ export const Menu: React.FC = () => {
     setSearchQuery("");
   };
 
-  const openFlyer = (index: number) => {
-    setSelectedFlyerIndex(index);
-    setIsFlyerModalOpen(true);
-  };
-
   return (
-    <section id="menu" className="py-24 relative bg-[#0B0B0B]">
+    <section id="menu" className="py-20 sm:py-24 relative bg-[#0B0B0B] overflow-hidden">
       {/* Background radial accent */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#E4572E]/5 rounded-full blur-[180px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header with Title and "View Printed Menu Flyers" CTA */}
+        {/* Header with Title */}
         <div className="flex flex-col items-center text-center gap-3 max-w-2xl mx-auto mb-10">
           <span className="text-[11px] font-bold text-[#F4B860] uppercase tracking-widest">
             Handcrafted With Passion
@@ -169,52 +158,6 @@ export const Menu: React.FC = () => {
           <p className="text-sm sm:text-base text-[#A8A29A]">
             Every single delicacy photographed and prepared fresh on hot cast iron with pure ghee, herbs, and slow-churned goodness.
           </p>
-
-          {/* Button to open printed menu flyers modal */}
-          <button
-            onClick={() => openFlyer(0)}
-            className="mt-3 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1C1B1B] hover:bg-[#2A2A2A] border border-[#F4B860]/40 text-[#F4B860] hover:text-[#ffcf7f] text-xs font-semibold tracking-wide transition-all shadow-md group cursor-pointer"
-          >
-            <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
-            <span>View Official Printed Menu Cards</span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#F4B860]/20 font-bold">3 Pages</span>
-          </button>
-        </div>
-
-        {/* 3 Printed Menu Cards Quick Preview Bar */}
-        <div className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-          {PRINTED_MENU_PAGES.map((page, idx) => (
-            <div
-              key={page.id}
-              onClick={() => openFlyer(idx)}
-              className="cursor-pointer group relative rounded-2xl overflow-hidden border border-white/10 hover:border-[#F4B860]/50 transition-all duration-300 bg-[#141414] shadow-md hover:shadow-xl"
-            >
-              <div className="h-32 w-full overflow-hidden relative">
-                <img
-                  src={page.image}
-                  alt={page.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-black/40 to-transparent" />
-                <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-black/70 border border-white/10 text-[10px] font-bold text-[#F4B860] uppercase">
-                  Page {idx + 1}
-                </div>
-              </div>
-
-              <div className="p-3.5 flex items-center justify-between">
-                <div>
-                  <h4 className="font-serif text-sm font-bold text-[#F5F1EA] group-hover:text-[#F4B860] transition-colors">
-                    {page.title}
-                  </h4>
-                  <p className="text-[11px] text-[#A8A29A] line-clamp-1">{page.category}</p>
-                </div>
-                <div className="w-7 h-7 rounded-full bg-white/5 group-hover:bg-[#F4B860] text-[#A8A29A] group-hover:text-black flex items-center justify-center transition-colors shrink-0">
-                  <Eye className="w-3.5 h-3.5" />
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* Search & Dietary Filter Bar */}
@@ -490,92 +433,6 @@ export const Menu: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Official Printed Menu Cards Modal / Lightbox */}
-      {isFlyerModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fadeIn"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setIsFlyerModalOpen(false);
-          }}
-        >
-          <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl bg-[#141414] border border-white/10 shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-[#0E0E0E]">
-              <div>
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-[#F5F1EA]">
-                  {PRINTED_MENU_PAGES[selectedFlyerIndex].title}
-                </h3>
-                <p className="text-xs text-[#F4B860]">
-                  {PRINTED_MENU_PAGES[selectedFlyerIndex].category}
-                </p>
-              </div>
-
-              <button
-                onClick={() => setIsFlyerModalOpen(false)}
-                className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 text-[#A8A29A] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="Close menu viewer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Flyer Image Display */}
-            <div className="relative flex-1 bg-black flex items-center justify-center overflow-auto p-2">
-              <img
-                src={PRINTED_MENU_PAGES[selectedFlyerIndex].image}
-                alt={PRINTED_MENU_PAGES[selectedFlyerIndex].title}
-                className="max-h-[68vh] w-auto object-contain rounded-lg shadow-2xl"
-              />
-
-              {/* Prev / Next Page Overlay Arrows */}
-              <button
-                onClick={() =>
-                  setSelectedFlyerIndex(
-                    (prev) => (prev - 1 + PRINTED_MENU_PAGES.length) % PRINTED_MENU_PAGES.length
-                  )
-                }
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-black/90 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg"
-                aria-label="Previous menu card"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              <button
-                onClick={() =>
-                  setSelectedFlyerIndex((prev) => (prev + 1) % PRINTED_MENU_PAGES.length)
-                }
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-black/90 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg"
-                aria-label="Next menu card"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Thumbnail Bottom Bar */}
-            <div className="p-3 bg-[#0E0E0E] border-t border-white/10 flex items-center justify-center gap-3">
-              {PRINTED_MENU_PAGES.map((page, idx) => (
-                <button
-                  key={page.id}
-                  onClick={() => setSelectedFlyerIndex(idx)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-                    selectedFlyerIndex === idx
-                      ? "bg-[#E4572E] text-white shadow-md"
-                      : "bg-[#1C1B1B] text-[#A8A29A] hover:text-white border border-white/5"
-                  }`}
-                >
-                  <span>Page {idx + 1}</span>
-                  <span className="hidden sm:inline opacity-80 text-[10px]">
-                    ({idx === 0 ? "Beverages" : idx === 1 ? "Snacks" : "Dosas & Combos"})
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 

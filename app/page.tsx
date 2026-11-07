@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Navbar } from "@/components/Navbar";
+import { MobileNavBar } from "@/components/MobileNavBar";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
 import { Menu } from "@/components/Menu";
@@ -12,8 +13,8 @@ import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0B0B0B] text-[#F5F1EA] flex flex-col selection:bg-[#E4572E] selection:text-white">
-      {/* Navigation Bar */}
+    <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#0B0B0B] text-[#F5F1EA] flex flex-col selection:bg-[#E4572E] selection:text-white">
+      {/* Top Navigation Bar */}
       <Navbar />
 
       {/* Hero Section */}
@@ -34,8 +35,11 @@ export default function Home() {
       {/* Location, Hours & Contact */}
       <Contact />
 
-      {/* Footer & Floating CTAs */}
+      {/* Footer & Floating Desktop CTAs */}
       <Footer />
+
+      {/* Mobile Sticky Bottom Navigation Bar */}
+      <MobileNavBar />
     </main>
   );
 }

@@ -6,7 +6,7 @@ import { MapPin, Phone, Clock, MessageCircle, Navigation, ExternalLink } from "l
 
 export const Contact: React.FC = () => {
   return (
-    <section id="contact" className="py-24 bg-[#0E0E0E] relative">
+    <section id="contact" className="py-20 sm:py-24 bg-[#0E0E0E] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center gap-2 max-w-2xl mx-auto mb-16">
